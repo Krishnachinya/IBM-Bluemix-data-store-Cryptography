@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Download and List Files</title>
+</head>
+<body>
+
+<p> Printing all the files in container <b> {{ result }} </b></p>
+<table border="1">
+    <tr>
+    <td>FileName</td>
+    <td>Date/Time</td>
+    <td>File Size in KB/s</td>
+    <td>FileType</td>
+
+    {% for key, value in result2.iteritems() %}
+    {% if key%4 == 0 %}
+    <tr>
+    {% endif %}
+        <td> {{ value }} </td>
+    {% endfor %}
+</table>
+
+<p> Enter the filename to download</p>
+     <form action="http://127.0.0.1:5000/downloadfile" method="post">
+        <input type="text" name="filename"/>
+        <input type="submit" value="submit">
+    </form>
+
+</body>
+</html>

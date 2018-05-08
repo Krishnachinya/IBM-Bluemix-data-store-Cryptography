@@ -1,0 +1,48 @@
+from flask import Flask ,redirect, url_for, request,render_template
+import json
+import swiftclient
+from keystoneclient import client
+import re
+import os
+import sys
+import base64
+
+app = Flask(__name__)
+
+@app.route('/Upload')
+def upload():
+    return render_template("Upload.html")
+
+#Basic connection details
+auth_url= "https://identity.open.softlayer.com/v3"
+project=""
+projectId="cf44dcfa4d8348228bd1e34628782152"
+region="london"
+userId="f9edee1918a94adfbd76468f10b99b32"
+username=""
+password="RkTzL4,8eqsI3y(]"
+
+container_name = 'prjcld_chinya'
+Uploadpath = '/Users/KrishnChinya/Desktop/Bluemix'
+Downloadpath = '/Users/KrishnChinya/Desktop/Bluemix_download'
+extension = ['txt','Txt','pdf','PDF','PNG','png','html','jpg']
+
+
+connectionst = swiftclient.Connection(authurl=auth_url,key=password,auth_version='3',os_options={"project_id": projectId,\
+                                    "user_id": userId,"region_name": region})
+
+
+
+
+@app.route('/uploader',methods=['POST','GET'])
+def uploader():
+    if request.method == 'POST':
+        fl = request.files['file']
+        if fl.endswith(tuple(extension)):
+            print fl
+            with open(fl, 'r') as file:
+                base64_encode = base64.encodestring(file.read())
+                connectionst.put_object(container_name, fl, contents=base64_encode, content_type='text')
+                file.close()
+
+
